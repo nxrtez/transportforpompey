@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Maps – Transport for Portsmouth{% endblock %}
+
+{% block content %}
+<h1>Maps</h1>
+
+<div class="maps-grid">
+
+  {% for map in maps %}
+    <a href="{{ map.path }}" class="map-tile">
+
+      <!-- Preview -->
+      <div
+        class="map-preview"
+        style="outline-color: {{ map.hex_colour }}"
+      >
+        {% if map.preview_image %}
+          <img
+            src="{{ map.preview_image.url }}"
+            alt=""
+            class="map-preview-img"
+          >
+        {% endif %}
+      </div>
+
+
+      <div class="map-tile-body">
+
+        <div class="map-text">
+          <h2>{{ map.title }}</h2>
+
+          <!-- Colour bar BETWEEN title and description -->
+          <span
+            class="map-bar"
+            style="background-color: {{ map.hex_colour }}"
+            aria-hidden="true"
+          ></span>
+
+          <p>{{ map.description }}</p>
+        </div>
+
+      </div>
+    </a>
+  {% endfor %}
+
+</div>
+{% endblock %}

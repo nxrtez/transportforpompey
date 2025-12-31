@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Routes – Transport for Portsmouth{% endblock %}
+
+{% block content %}
+<h1>Routes</h1>
+
+{% for mode in modes %}
+  <section class="routes-mode">
+    <h2>{{ mode.name }}</h2>
+
+    <ul class="routes-list">
+      {% for route in routes %}
+        {% if route.mode == mode %}
+          <li class="route-row">
+            <button
+              class="route-toggle"
+              type="button"
+              aria-expanded="false"
+            >
+              <!-- Colour bar -->
+              <span
+                class="status-bar"
+                style="background-color: {{ route.route_hex|default:route.operator.primary_hex }}"
+                aria-hidden="true"
+              ></span>
+
+              <!-- Main row content -->
+              <span class="route-main">
+                <a
+                  href="{% url 'siteui:route_detail' route.uuid %}"
+                  class="route-service"
+                >
+                  {{ route.service }}
+                </a>
+                <span class="route-operator">{{ route.operator.operator_name }}</span>
+              </span>
+
+              <!-- Chevron -->
+              <span class="route-chevron" aria-hidden="true">▾</span>
+            </button>
+
+            <!-- Dropdown -->
+            <div class="route-dropdown" hidden>
+              <div class="route-detail">
+                <strong>Route:</strong>
+                {{ route.origin }} → {{ route.destination }}
+              </div>
+
+              {% if route.via %}
+                <div class="route-detail">
+                  <strong>Via:</strong> {{ route.via }}
+                </div>
+              {% endif %}
+
+              {% if route.vehicles_used.all %}
+                <div class="route-detail">
+                  <strong>Vehicles:</strong>
+                  {% for vehicle in route.vehicles_used.all %}
+                    {{ vehicle.name }}{% if not forloop.last %}, {% endif %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </section>
+{% endfor %}
+{% endblock %}

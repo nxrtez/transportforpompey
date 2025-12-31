@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Fares – Transport for Portsmouth{% endblock %}
+
+{% block content %}
+<h1>Fares</h1>
+
+{% for operator in operators %}
+  {% if operator.tickets.all %}
+    <section class="fares-operator">
+      <h2>{{ operator.operator_name }}</h2>
+
+      <ul class="fares-list">
+        {% for ticket in operator.tickets.all %}
+          <li class="fare-row">
+            <button
+              class="fare-toggle"
+              type="button"
+              aria-expanded="false"
+            >
+              <!-- Colour bar -->
+              <span
+                class="status-bar"
+                style="background-color: {{ operator.primary_hex }}"
+                aria-hidden="true"
+              ></span>
+
+              <!-- Main row -->
+              <span class="fare-main">
+                <span class="fare-name">{{ ticket.name }}</span>
+                <span class="fare-price">£{{ ticket.price }}</span>
+              </span>
+
+              <!-- Chevron -->
+              <span class="fare-chevron" aria-hidden="true">▾</span>
+            </button>
+
+            <!-- Dropdown -->
+            <div class="fare-dropdown" hidden>
+              <div class="fare-detail">
+                <strong>Duration:</strong> {{ ticket.duration }}
+              </div>
+
+              {% if ticket.description %}
+                <div class="fare-detail">
+                  {{ ticket.description }}
+                </div>
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endif %}
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Stagecoach routes – Transport for Portsmouth{% endblock %}
+
+{% block content %}
+
+<section class="operator-hero stagecoach-hero">
+  <div class="operator-hero-inner">
+    {% if operator.logo_banner %}
+      <img
+        src="{{ operator.logo_banner.url }}"
+        alt="{{ operator.operator_name }}"
+        class="operator-hero-logo"
+      >
+    {% else %}
+      <h1 class="operator-hero-title">{{ operator.operator_name }}</h1>
+    {% endif %}
+  </div>
+</section>
+
+<section class="operator-content stagecoach-content">
+
+  <header class="operator-header">
+    <h2>Routes operated</h2>
+    <p class="operator-subtitle">
+      Local bus services operated by {{ operator.operator_name }}.
+    </p>
+  </header>
+
+  <ul class="operator-route-list stagecoach-route-list">
+    {% for route in routes %}
+      <li class="operator-route-row">
+        <span
+          class="route-colour-bar"
+          style="background-color: {{ route.route_hex|default:operator.primary_hex }}"
+        ></span>
+
+        <div class="route-main">
+          <a
+            href="{% url 'route_detail' route.uuid %}"
+            class="route-service"
+          >
+            {{ route.service }}
+          </a>
+
+          <span class="route-desc">
+            {{ route.origin }} → {{ route.destination }}
+          </span>
+
+          {% if route.via %}
+            <span class="route-via">
+              via {{ route.via }}
+            </span>
+          {% endif %}
+        </div>
+      </li>
+    {% empty %}
+      <li class="operator-route-empty">
+        No routes available.
+      </li>
+    {% endfor %}
+  </ul>
+
+</section>
+
+{% endblock %}

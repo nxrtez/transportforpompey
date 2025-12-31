@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Transport for Portsmouth{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+
+<header class="tfl-lite-header">
+  <div class="tfl-lite-inner">
+
+    <!-- Logo -->
+  <a href="/" class="tfl-logo-img" aria-label="Transport for Portsmouth home">
+    <img
+      src="{% static 'img/tfp/Blue Circular Transparent.png' %}"
+      alt="Transport for Portsmouth"
+      width="50"
+      height="50"
+    >
+    <!-- Navigation -->
+    <nav class="tfl-lite-nav" aria-label="Primary navigation">
+      <ul>
+        <li><a href="/status/">Status</a></li>
+        <li><a href="/maps/">Maps</a></li>
+        <li><a href="/fares/">Fares</a></li>
+        <li><a href="/routes/">Routes</a></li>
+        <li><a href="/operators/">Operators</a></li>
+        <li><a href="/help/">Help</a></li>
+      </ul>
+    </nav>
+
+  </div>
+</header>
+
+<main class="site-main">
+  {% block content %}{% endblock %}
+</main>
+
+</body>
+</html>
+
+<script>
+  document.addEventListener("click", function (e) {
+    const toggle = e.target.closest(".route-toggle, .fare-toggle");
+    if (!toggle) return;
+
+    const dropdown = toggle.nextElementSibling;
+    if (!dropdown) return;
+
+    const expanded = toggle.getAttribute("aria-expanded") === "true";
+
+    toggle.setAttribute("aria-expanded", String(!expanded));
+    dropdown.hidden = expanded;
+
+    const chevron = toggle.querySelector(".route-chevron, .fare-chevron");
+    if (chevron) {
+      chevron.style.transform = expanded
+        ? "rotate(0deg)"
+        : "rotate(180deg)";
+    }
+  });
+</script>

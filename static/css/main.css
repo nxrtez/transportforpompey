@@ -1,0 +1,552 @@
+/* ---------- Reset ---------- */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+  color: #1a1a1a;
+  background: #ffffff;
+}
+
+/* ---------- Header ---------- */
+
+.tfl-lite-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.tfl-lite-inner {
+  max-width: 1280px;
+  height: 64px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+}
+
+/* ---------- Navigation ---------- */
+
+.tfl-lite-nav ul {
+  list-style: none;
+  display: flex;
+  gap: 32px;
+  padding: 0;
+  margin: 0;
+}
+
+.tfl-lite-nav a {
+  text-decoration: none;
+  color: #1a1a1a;
+  font-size: 1.05rem;
+  font-weight: 500;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+}
+
+.tfl-lite-nav a:hover,
+.tfl-lite-nav a:focus {
+  border-bottom-color: #0019a8;
+}
+
+/* ---------- Main ---------- */
+
+.site-main {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 24px;
+}
+
+/* ---------- Status list (TfL-style) ---------- */
+
+.status-route {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+}
+
+.status-bar {
+  width: 4px;
+  height: 20px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.route-name {
+  font-weight: 600;
+  min-width: 3ch;
+}
+
+.route-status {
+  color: #1a1a1a;
+  font-size: 0.95rem;
+}
+
+/* ---------- Operator list (TfL-style) ---------- */
+
+.operator-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.operator-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.operator-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  display: block;
+}
+
+.operator-name {
+  font-weight: 600;
+  text-decoration: none;
+  color: #1a1a1a;
+}
+
+.operator-name:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Routes list ---------- */
+
+.routes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.route-row {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.route-toggle {
+  all: unset;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+.route-toggle:focus-visible {
+  outline: 2px solid #0019A8;
+  outline-offset: 2px;
+}
+
+.route-main {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+  align-items: baseline;
+}
+
+.route-service {
+  font-weight: 600;
+  min-width: 3ch;
+}
+
+.route-operator {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.route-chevron {
+  font-size: 0.9rem;
+  transition: transform 0.15s ease;
+}
+
+/* ---------- Dropdown ---------- */
+
+.route-dropdown {
+  padding: 8px 16px 12px 16px;
+  background: #f9f9f9;
+}
+
+.route-detail {
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+/* ---------- Fares list ---------- */
+
+.fares-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.fare-row {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.fare-toggle {
+  all: unset;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+.fare-toggle:focus-visible {
+  outline: 2px solid #0019A8;
+  outline-offset: 2px;
+}
+
+.fare-main {
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+  gap: 16px;
+}
+
+.fare-name {
+  font-weight: 600;
+}
+
+.fare-price {
+  font-weight: 600;
+}
+
+.fare-chevron {
+  font-size: 0.9rem;
+  transition: transform 0.15s ease;
+}
+
+/* ---------- Dropdown ---------- */
+
+.fare-dropdown {
+  padding: 8px 16px 12px 16px;
+  background: #f9f9f9;
+}
+
+.fare-detail {
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+/* ---------- Maps grid ---------- */
+
+.maps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.map-tile {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 3px solid #d8d8d8;
+}
+
+.map-tile img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+.map-tile-body {
+  padding: 16px 0;
+}
+
+.map-tile h2 {
+  font-size: 1.1rem;
+  margin: 0 0 6px 0;
+}
+
+.map-tile p {
+  margin: 0;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.map-tile:hover {
+  border-bottom-color: #0019A8;
+}
+/* ---------- Map tiles (data-driven) ---------- */
+
+.map-preview {
+  height: 160px;
+  background: #f2f2f2;
+  outline: 3px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-preview-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+
+.map-tile-body {
+  display: flex;
+  gap: 12px;
+  padding: 16px 0;
+}
+
+.map-text h2 {
+  margin: 0 0 6px 0;
+  font-size: 1.1rem;
+}
+
+.map-text p {
+  margin: 0;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+/* ---------- Route detail ---------- */
+
+.route-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.route-header h1 {
+  margin: 0;
+}
+
+.route-section {
+  margin-bottom: 32px;
+}
+
+.simple-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.simple-list li {
+  margin-bottom: 6px;
+}
+
+/* =========================
+   FIRST BUS CUSTOM PAGE
+========================= */
+
+.firstbus-hero {
+  height: 420px;
+  position: relative;
+  background: #6E2B8C; /* brand fallback */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.firstbus-hero-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+
+  position: absolute;
+  inset: 0;
+  margin: auto;
+
+}
+
+/* Overlay stays readable */
+.firstbus-hero-overlay {
+  position: relative;
+  z-index: 2;
+
+  color: white;
+
+  padding: 48px;
+
+  max-width: 560px;      /* 🔑 THIS fixes the mess */
+  margin-left: 64px;     /* TfL-style inset */
+  opacity: 1;
+}
+
+
+.firstbus-logo {
+  width: 120px;   /* down from 160 */
+  height: auto;
+  margin-bottom: 12px;
+  opacity: 0;
+}
+
+
+.firstbus-hero h1 {
+  font-size: 2.4rem;
+  margin: 0;
+}
+
+.firstbus-hero p {
+  font-size: 1.1rem;
+  margin-top: 8px;
+}
+
+/* Status strip */
+.firstbus-status {
+  background: #E6007E;
+  color: white;
+  padding: 12px 24px;
+}
+
+/* Sections */
+.firstbus-section {
+  padding: 32px 0;
+}
+
+.firstbus-section h2 {
+  margin-bottom: 16px;
+}
+
+/* Routes */
+.firstbus-routes {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.firstbus-routes li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.firstbus-route-desc {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+/* Tickets */
+.firstbus-ticket-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.firstbus-ticket {
+  border: 2px solid #6E2B8C;
+  padding: 16px;
+}
+
+.firstbus-ticket .price {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #6E2B8C;
+}
+
+.firstbus-ticket .duration {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Footer info */
+.firstbus-info {
+  background: #f4f4f4;
+  padding: 16px;
+  font-size: 0.9rem;
+}
+/* =========================
+   Stagecoach operator page
+   ========================= */
+
+.stagecoach-hero {
+  background: linear-gradient(
+    90deg,
+    #005daa 0%,
+    #003f7d 100%
+  );
+  padding: 2.5rem 1.5rem;
+}
+
+.operator-hero-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.operator-hero-logo {
+  max-height: 80px;
+}
+
+.operator-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.operator-header h2 {
+  font-size: 1.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.operator-subtitle {
+  color: #555;
+  margin-bottom: 1.5rem;
+}
+
+/* Routes list */
+
+.stagecoach-route-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.operator-route-row {
+  display: flex;
+  align-items: stretch;
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.route-colour-bar {
+  width: 6px;
+  flex-shrink: 0;
+}
+
+.route-main {
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.route-service {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #005daa;
+  text-decoration: none;
+}
+
+.route-service:hover {
+  text-decoration: underline;
+}
+
+.route-desc {
+  font-size: 0.95rem;
+  color: #222;
+}
+
+.route-via {
+  font-size: 0.85rem;
+  color: #666;
+}

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}{{ route.service }} – Transport for Portsmouth{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<section class="route-header">
+  <span
+    class="status-bar"
+    style="background-color: {{ route.route_hex|default:route.operator.primary_hex }}"
+    aria-hidden="true"
+  ></span>
+
+  <h1>{{ route.service }}</h1>
+</section>
+
+<!-- Status -->
+<section class="route-section">
+  <h2>Status</h2>
+
+  {% if status %}
+    <p>
+      <strong>{{ status.status_type.name }}</strong><br>
+      {{ status.summary }}
+    </p>
+  {% else %}
+    <p><strong>Good Service</strong></p>
+  {% endif %}
+</section>
+
+<!-- Operator -->
+<section class="route-section">
+  <h2>Operator</h2>
+  <p>
+    <a href="{% url 'operator_detail' route.operator.bustimes_slug %}">
+      {{ route.operator.operator_name }}
+    </a>
+  </p>
+</section>
+
+<!-- Route description -->
+<section class="route-section">
+  <h2>Route</h2>
+  <p>
+    {{ route.origin }} → {{ route.destination }}
+    {% if route.via %} (via {{ route.via }}){% endif %}
+  </p>
+</section>
+
+<!-- Maps -->
+<section class="route-section">
+  <h2>Maps</h2>
+
+  <ul class="simple-list">
+    {% for map in maps %}
+      <li>
+        {% if map.slug %}
+          <a href="{% url 'map_detail' map.slug %}">
+            {{ map.title }}
+          </a>
+        {% else %}
+          {{ map.title }}
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+
+<!-- Tickets -->
+<section class="route-section">
+  <h2>Tickets</h2>
+
+  {% if tickets %}
+    <ul class="simple-list">
+      {% for ticket in tickets %}
+        <li>
+          {{ ticket.name }} – £{{ ticket.price }} ({{ ticket.duration }})
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No ticket information available.</p>
+  {% endif %}
+</section>
+
+{% endblock %}

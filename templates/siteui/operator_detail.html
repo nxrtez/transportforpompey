@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}{{ operator.operator_name }} – Transport for Portsmouth{% endblock %}
+
+{% block content %}
+
+<section class="operator-header">
+  <h1>{{ operator.operator_name }}</h1>
+
+  {% if operator.logo_banner %}
+    <img
+      src="{{ operator.logo_banner.url }}"
+      alt="{{ operator.operator_name }}"
+    >
+  {% endif %}
+</section>
+
+---
+
+<section class="operator-routes">
+  <h2>Routes</h2>
+
+  {% regroup routes by mode as mode_groups %}
+
+  {% for group in mode_groups %}
+    <h3>{{ group.grouper.name }}</h3>
+
+    <ul>
+      {% for route in group.list %}
+        <li>
+          <span
+            class="route-colour"
+            style="background-color: {{ route.route_hex|default:operator.primary_hex }}"
+            aria-hidden="true"
+          ></span>
+
+          {{ route.service }} –
+          {{ route.origin }} → {{ route.destination }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+</section>
+
+---
+
+<section class="operator-tickets">
+  <h2>Tickets</h2>
+
+  {% if tickets %}
+    <ul>
+      {% for ticket in tickets %}
+        <li>
+          <strong>{{ ticket.name }}</strong><br>
+          £{{ ticket.price }} – {{ ticket.duration }}<br>
+          {{ ticket.description }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No ticket information available.</p>
+  {% endif %}
+</section>
+
+{% endblock %}

@@ -1,0 +1,669 @@
+{# templates/siteui/home.html #}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home – Transport for Portsmouth{% endblock %}
+
+{% block content %}
+<style>
+  /* =========
+     HOME ONLY
+     ========= */
+
+    :root{
+    --home-bg: #0b0d10;
+    --home-panel: #12151b;
+    --home-border: rgba(255,255,255,.10);
+
+    /* Primary brand accent (TfP blue) */
+    --home-accent: #1e90ff;
+    --home-accent-soft: rgba(30,144,255,.25);
+
+    /* Text */
+    --home-text: #f5f7fa;
+    --home-subtext: #c7ccd6;
+
+    /* Status */
+    --status-good: #22c55e;
+    --status-minor: #f59e0b;
+    --status-bad: #ef4444;
+    }
+
+
+  .home-wrap{
+    display: grid;
+    gap: 18px;
+    padding: 10px 0 28px;
+  }
+
+  /* HERO */
+  .home-hero{
+    position: relative;
+    border-radius: var(--home-radius);
+    overflow: hidden;
+    border: 1px solid var(--home-card-border);
+    background: #0b0b0f;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    min-height: 360px;
+  }
+
+  /* Recommended media sizes:
+     - Image: 2560x1440 (or 1920x1080) JPG/WEBP
+     - Video: 1920x1080 MP4 (H.264), 8–20s loop, muted
+  */
+  .hero-media{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    /* “Fit” without stretching:
+       - Use 'cover' for full-bleed cinematic look
+       - Switch to 'contain' if you want the entire media always visible (may letterbox)
+    */
+    object-fit: cover;
+    object-position: center;
+    transform: scale(1.02);
+    filter: saturate(1.05) contrast(1.05);
+  }
+
+  /* Layered overlay to avoid “one bit darker than another” issues */
+  .hero-overlay{
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(90% 80% at 20% 20%, rgba(0,0,0,.15), rgba(0,0,0,.65) 55%, rgba(0,0,0,.82) 100%),
+      linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.65) 65%, rgba(0,0,0,.80));
+    pointer-events: none;
+  }
+
+  .hero-inner{
+    position: relative;
+    z-index: 2;
+    padding: 26px 22px;
+    color: var(--home-text);
+    display: grid;
+    gap: 14px;
+    align-content: end;
+    min-height: 360px;
+  }
+
+  .hero-kicker{
+    display: inline-flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 13px;
+    color: rgba(255,255,255,.75);
+    letter-spacing: .2px;
+  }
+
+  .pill{
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(0,0,0,.35);
+    border: 1px solid rgba(255,255,255,.12);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    gap: 8px;
+  }
+
+  .pill-dot{
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4ade80; /* “good” dot */
+    box-shadow: 0 0 0 3px rgba(74,222,128,.15);
+  }
+
+  .hero-title{
+    font-size: clamp(26px, 4vw, 44px);
+    line-height: 1.04;
+    margin: 0;
+    letter-spacing: -0.4px;
+  }
+
+  .hero-subtitle{
+    margin: 0;
+    max-width: 70ch;
+    color: var(--home-subtext);
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .hero-actions{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 6px;
+  }
+
+  .home-btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.08);
+    color: rgba(255,255,255,.92);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: transform .12s ease, background .12s ease, border-color .12s ease;
+  }
+  .home-btn:hover{
+    transform: translateY(-1px);
+    background: rgba(255,255,255,.11);
+    border-color: rgba(255,255,255,.20);
+    text-decoration: none;
+  }
+
+  .home-btn.primary{
+    background: rgba(59,130,246,.22);
+    border-color: rgba(59,130,246,.40);
+  }
+  .home-btn.primary:hover{
+    background: rgba(59,130,246,.28);
+    border-color: rgba(59,130,246,.55);
+  }
+
+  /* QUICK SEARCH CARD (on hero) */
+  .hero-search{
+    margin-top: 6px;
+    max-width: 900px;
+    background: rgba(0,0,0,.32);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 16px;
+    padding: 12px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .hero-search form{
+    display: grid;
+    gap: 10px;
+  }
+
+  .hero-search .row{
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 10px;
+  }
+
+  .home-input{
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.06);
+    color: rgba(255,255,255,.92);
+    padding: 10px 12px;
+    outline: none;
+  }
+  .home-input::placeholder{ color: rgba(255,255,255,.45); }
+
+  .home-submit{
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.10);
+    color: rgba(255,255,255,.92);
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform .12s ease, background .12s ease, border-color .12s ease;
+  }
+  .home-submit:hover{
+    transform: translateY(-1px);
+    background: rgba(255,255,255,.14);
+    border-color: rgba(255,255,255,.22);
+  }
+
+  .hero-search .help{
+    margin: 0;
+    font-size: 12.5px;
+    color: rgba(255,255,255,.70);
+  }
+
+  /* GRID SECTIONS */
+  .home-grid{
+    display: grid;
+    gap: 18px;
+    grid-template-columns: 1.2fr .8fr;
+  }
+
+  .home-card{
+    border-radius: var(--home-radius);
+    border: 1px solid var(--home-card-border);
+    background: rgba(255,255,255,.04);
+    box-shadow: 0 10px 22px rgba(0,0,0,.22);
+    overflow: hidden;
+  }
+
+  .card-head{
+    padding: 16px 16px 0;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .card-head h2{
+    margin: 0;
+    font-size: 18px;
+    letter-spacing: -0.2px;
+    color: rgba(255,255,255,.92);
+  }
+  .card-head a{
+    color: rgba(255,255,255,.75);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .card-head a:hover{ text-decoration: underline; }
+
+  .card-body{ padding: 14px 16px 16px; }
+
+  .quick-links{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 10px;
+  }
+
+  .quick-link{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 12px 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(0,0,0,.22);
+    text-decoration: none;
+    transition: transform .12s ease, background .12s ease, border-color .12s ease;
+  }
+  .quick-link:hover{
+    transform: translateY(-1px);
+    background: rgba(0,0,0,.28);
+    border-color: rgba(255,255,255,.16);
+    text-decoration: none;
+  }
+
+  .ql-ico{
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.10);
+    color: rgba(255,255,255,.85);
+    font-weight: 800;
+  }
+  .ql-text strong{
+    display: block;
+    color: rgba(255,255,255,.92);
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+  .ql-text span{
+    display: block;
+    color: rgba(255,255,255,.65);
+    font-size: 12.5px;
+    line-height: 1.25;
+  }
+
+  /* STATUS LIST PREVIEW */
+  .status-mini{
+    display: grid;
+    gap: 10px;
+  }
+  .status-row{
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: rgba(0,0,0,.22);
+    border: 1px solid rgba(255,255,255,.10);
+  }
+  .badge{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+    font-size: 12px;
+    color: rgba(255,255,255,.85);
+    white-space: nowrap;
+  }
+  .badge .dot{
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34,197,94,.15);
+  }
+  .status-row .title{
+    color: rgba(255,255,255,.92);
+    font-weight: 700;
+    font-size: 13.5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .status-row .meta{
+    color: rgba(255,255,255,.65);
+    font-size: 12.5px;
+    white-space: nowrap;
+  }
+
+  /* OPERATOR STRIP */
+  .operators-strip{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .op-card{
+    border-radius: 16px;
+    padding: 12px;
+    background: rgba(0,0,0,.22);
+    border: 1px solid rgba(255,255,255,.10);
+    display: grid;
+    gap: 10px;
+  }
+  .op-top{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .op-logo{
+    width: 52px;
+    height: 38px;
+    border-radius: 12px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.10);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+  .op-logo img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    padding: 6px;
+  }
+  .op-name{
+    margin: 0;
+    color: rgba(255,255,255,.92);
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.15;
+  }
+  .op-sub{
+    margin: 2px 0 0;
+    color: rgba(255,255,255,.65);
+    font-size: 12.5px;
+  }
+  .op-actions{
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .op-actions a{
+    flex: 1 1 auto;
+    text-align: center;
+    padding: 8px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.06);
+    color: rgba(255,255,255,.85);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 12.5px;
+  }
+  .op-actions a:hover{
+    background: rgba(255,255,255,.09);
+    border-color: rgba(255,255,255,.16);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 980px){
+    .home-grid{ grid-template-columns: 1fr; }
+    .hero-search .row{ grid-template-columns: 1fr; }
+    .operators-strip{ grid-template-columns: 1fr; }
+  }
+  @media (max-width: 520px){
+    .quick-links{ grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="home-wrap">
+
+  <!-- HERO -->
+  <section class="home-hero" aria-label="Transport for Portsmouth home">
+    {# Use either a video or an image. Drop your assets into /static/siteui/media/ ... #}
+
+    {# OPTION A (video): place file at static/siteui/media/home-hero.mp4 #}
+    <video
+      class="hero-media"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      poster="{% static 'siteui/media/home-hero-poster.jpg' %}"
+    >
+      <source src="{% static 'siteui/media/home-hero.mp4' %}" type="video/mp4">
+    </video>
+
+    {# OPTION B (image): uncomment and remove video if preferred
+    <img class="hero-media" src="{% static 'siteui/media/home-hero.jpg' %}" alt="">
+    #}
+
+    <div class="hero-overlay"></div>
+
+    <div class="hero-inner">
+      <div class="hero-kicker">
+        <span class="pill">
+          <span class="pill-dot" aria-hidden="true"></span>
+          Live service information, routes, operators and maps
+        </span>
+      </div>
+
+      <h1 class="hero-title">Transport for Portsmouth</h1>
+      <p class="hero-subtitle">
+        One place for local bus, rail and ferry information — including service status, operator pages,
+        route details and downloadable maps.
+      </p>
+
+      <div class="hero-actions">
+        <a class="home-btn primary" href="{% url 'siteui:status' %}">View service status</a>
+        <a class="home-btn" href="{% url 'siteui:operators' %}">Browse operators</a>
+        <a class="home-btn" href="{% url 'siteui:maps' %}">Maps</a>
+      </div>
+
+      <!-- QUICK SEARCH -->
+      <div class="hero-search" role="search" aria-label="Quick route search">
+        <form method="get" action="{% url 'siteui:routes' %}">
+          <div class="row">
+            <input class="home-input" type="text" name="q" placeholder="Search routes (e.g. 3, X4, 700) …" value="{{ request.GET.q|default:'' }}">
+            <input class="home-input" type="text" name="operator" placeholder="Operator (optional) …" value="{{ request.GET.operator|default:'' }}">
+            <button class="home-submit" type="submit">Search</button>
+          </div>
+          <p class="help">Tip: search by route number, destination, or operator name.</p>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MAIN GRID -->
+  <section class="home-grid">
+
+    <!-- LEFT: QUICK LINKS + FEATURED -->
+    <div class="home-card">
+      <div class="card-head">
+        <h2>Quick links</h2>
+        <a href="{% url 'siteui:routes' %}">All routes →</a>
+      </div>
+
+      <div class="card-body">
+        <div class="quick-links">
+          <a class="quick-link" href="{% url 'siteui:status' %}">
+            <div class="ql-ico">S</div>
+            <div class="ql-text">
+              <strong>Service status</strong>
+              <span>Live disruptions and route status</span>
+            </div>
+          </a>
+
+          <a class="quick-link" href="{% url 'siteui:operators' %}">
+            <div class="ql-ico">O</div>
+            <div class="ql-text">
+              <strong>Operators</strong>
+              <span>Branded pages, contact and routes</span>
+            </div>
+          </a>
+
+          <a class="quick-link" href="{% url 'siteui:maps' %}">
+            <div class="ql-ico">M</div>
+            <div class="ql-text">
+              <strong>Maps</strong>
+              <span>Network maps and local area PDFs</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="card-head">
+        <h2>Featured operators</h2>
+        <a href="{% url 'siteui:operators' %}">View all →</a>
+      </div>
+
+      <div class="card-body">
+        {# If you pass `featured_operators` from the view, this will render dynamically.
+           Otherwise it shows static examples (won’t error). #}
+        <div class="operators-strip">
+          {% for op in featured_operators|default:None %}
+            <div class="op-card">
+              <div class="op-top">
+                <div class="op-logo">
+                  {% if op.logo %}
+                    <img src="{{ op.logo.url }}" alt="{{ op.name }}">
+                  {% else %}
+                    <span style="color: rgba(255,255,255,.7); font-weight: 900;">{{ op.name|slice:":2"|upper }}</span>
+                  {% endif %}
+                </div>
+                <div>
+                  <p class="op-name">{{ op.name }}</p>
+                  <p class="op-sub">{{ op.operator_name|default:"Operator" }}</p>
+                </div>
+              </div>
+              <div class="op-actions">
+                <a href="{% url 'siteui:operator_detail' op.slug %}">Operator page</a>
+                <a href="{% url 'siteui:routes' %}?operator={{ op.name|urlencode }}">Routes</a>
+              </div>
+            </div>
+          {% empty %}
+            <!-- Fallback examples (safe if you haven't wired featured_operators yet) -->
+            <div class="op-card">
+              <div class="op-top">
+                <div class="op-logo"><span style="color: rgba(255,255,255,.7); font-weight: 900;">FB</span></div>
+                <div><p class="op-name">First Bus</p><p class="op-sub">Featured operator</p></div>
+              </div>
+              <div class="op-actions">
+                <a href="{% url 'siteui:operators' %}">Operators</a>
+                <a href="{% url 'siteui:routes' %}">Routes</a>
+              </div>
+            </div>
+
+            <div class="op-card">
+              <div class="op-top">
+                <div class="op-logo"><span style="color: rgba(255,255,255,.7); font-weight: 900;">SC</span></div>
+                <div><p class="op-name">Stagecoach</p><p class="op-sub">Featured operator</p></div>
+              </div>
+              <div class="op-actions">
+                <a href="{% url 'siteui:operators' %}">Operators</a>
+                <a href="{% url 'siteui:routes' %}">Routes</a>
+              </div>
+            </div>
+
+            <div class="op-card">
+              <div class="op-top">
+                <div class="op-logo"><span style="color: rgba(255,255,255,.7); font-weight: 900;">SR</span></div>
+                <div><p class="op-name">South Western Railway</p><p class="op-sub">Featured operator</p></div>
+              </div>
+              <div class="op-actions">
+                <a href="{% url 'siteui:operators' %}">Operators</a>
+                <a href="{% url 'siteui:routes' %}">Routes</a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: STATUS PREVIEW -->
+    <aside class="home-card" aria-label="Service status preview">
+      <div class="card-head">
+        <h2>Right now</h2>
+        <a href="{% url 'siteui:status' %}">Full status →</a>
+      </div>
+
+      <div class="card-body">
+        <div class="status-mini">
+          {# If you pass `status_preview` (list of items) from the view, render it. #}
+          {% for item in status_preview|default:None %}
+            <div class="status-row">
+              <span class="badge" title="{{ item.status_name }}">
+                <span class="dot" aria-hidden="true"></span>
+                {{ item.status_name }}
+              </span>
+              <div class="title">{{ item.title }}</div>
+              <div class="meta">{{ item.meta }}</div>
+            </div>
+          {% empty %}
+            <!-- Fallback placeholders -->
+            <div class="status-row">
+              <span class="badge"><span class="dot" aria-hidden="true"></span>Good service</span>
+              <div class="title">Buses</div>
+              <div class="meta">Updated live</div>
+            </div>
+            <div class="status-row">
+              <span class="badge"><span class="dot" aria-hidden="true"></span>Good service</span>
+              <div class="title">Rail</div>
+              <div class="meta">Updated live</div>
+            </div>
+            <div class="status-row">
+              <span class="badge"><span class="dot" aria-hidden="true"></span>Good service</span>
+              <div class="title">Ferries</div>
+              <div class="meta">Updated live</div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div style="height: 12px;"></div>
+
+        <div style="
+          border-radius: 16px;
+          border: 1px solid rgba(255,255,255,.10);
+          background: rgba(0,0,0,.22);
+          padding: 12px;
+          color: rgba(255,255,255,.75);
+          font-size: 13px;
+          line-height: 1.35;
+        ">
+          <strong style="color: rgba(255,255,255,.92);">Pro tip:</strong>
+          Operator pages can be fully branded. Routes can link straight into their operator’s info and maps.
+        </div>
+      </div>
+    </aside>
+
+  </section>
+
+</div>
+{% endblock %}

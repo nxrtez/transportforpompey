@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}First Bus – Transport for Portsmouth{% endblock %}
+
+{% block content %}
+
+<!-- =========================
+     HERO / BRAND HEADER
+========================= -->
+<section class="firstbus-hero">
+  <img
+    src="{{ operator.logo_banner.url }}"
+    alt=""
+    class="firstbus-hero-img"
+  >
+
+  <div class="firstbus-hero-overlay">
+    <img
+      src="{{ operator.logo_circular.url }}"
+      alt="First Bus"
+      class="firstbus-logo"
+    >
+    <h1>First Bus</h1>
+    <p>Bus services across Portsmouth and the surrounding area</p>
+  </div>
+</section>
+
+
+<!-- =========================
+     STATUS STRIP
+========================= -->
+<section class="firstbus-status">
+  <strong>Service update:</strong>
+  Check live service status for all First Bus routes below.
+</section>
+
+<!-- =========================
+     ROUTES
+========================= -->
+<section class="firstbus-section">
+  <h2>Routes</h2>
+
+  <ul class="firstbus-routes">
+    {% for route in routes %}
+      <li>
+        <span
+          class="status-bar"
+          style="background-color: {{ route.route_hex|default:operator.primary_hex }}"
+        ></span>
+
+        <a href="{% url 'route_detail' route.uuid %}">
+          {{ route.service }}
+        </a>
+
+        <span class="firstbus-route-desc">
+          {{ route.origin }} → {{ route.destination }}
+        </span>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+
+<!-- =========================
+     TICKETS
+========================= -->
+<section class="firstbus-section firstbus-tickets">
+  <h2>Tickets</h2>
+
+  <div class="firstbus-ticket-grid">
+    {% for ticket in tickets %}
+      <div class="firstbus-ticket">
+        <h3>{{ ticket.name }}</h3>
+        <p class="price">£{{ ticket.price }}</p>
+        <p class="duration">{{ ticket.duration }}</p>
+        <p class="desc">{{ ticket.description }}</p>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- =========================
+     INFO STRIP
+========================= -->
+<section class="firstbus-info">
+  <p>
+    For lost property, accessibility support, or service enquiries,
+    visit <a href="{{ operator.website }}" target="_blank">firstbus.co.uk</a>
+  </p>
+</section>
+
+{% endblock %}

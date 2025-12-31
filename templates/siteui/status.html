@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Service status – Transport for Portsmouth{% endblock %}
+
+{% block content %}
+<h1>Service status</h1>
+
+{% for mode in modes %}
+  <section class="status-mode">
+    <h2>{{ mode.name }}</h2>
+
+    {% regroup routes by operator as operator_groups %}
+
+    {% for group in operator_groups %}
+      {% if group.list.0.mode == mode %}
+        <div class="status-operator">
+          <h3>{{ group.grouper.operator_name }}</h3>
+
+          <ul class="status-route-list">
+            {% for route in group.list %}
+              {% if route.mode == mode %}
+                {% with status=route.active_statuses.0 %}
+                <li class="status-route">
+                    {% with bar_colour=route.route_hex|default:route.operator.primary_hex %}
+                        <span
+                        class="status-bar"
+                        style="background-color: {{ bar_colour }}"
+                        aria-hidden="true"
+                        ></span>
+                    {% endwith %}
+
+                    <span class="route-name">
+                        {{ route.service }}
+                    </span>
+
+                    <span class="route-status">
+                        {{ status.status_type.name|default:"Good Service" }}
+                    </span>
+                    </li>
+
+                {% endwith %}
+              {% endif %}
+            {% endfor %}
+          </ul>
+
+        </div>
+      {% endif %}
+    {% endfor %}
+
+  </section>
+{% endfor %}
+{% endblock %}

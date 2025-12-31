@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Operators – Transport for Portsmouth{% endblock %}
+
+{% block content %}
+<h1>Operators</h1>
+
+<ul class="operator-list">
+  {% for operator in operators %}
+    <li class="operator-row">
+
+      <!-- Colour bar -->
+      <span
+        class="status-bar"
+        style="background-color: {{ operator.primary_hex }}"
+        aria-hidden="true"
+      ></span>
+
+      <!-- Circular logo -->
+      {% if operator.logo_circular %}
+        <img
+          src="{{ operator.logo_circular.url }}"
+          alt="{{ operator.operator_name }}"
+          class="operator-logo"
+        >
+      {% endif %}
+
+      <!-- Operator name (HARD-CODED ROUTING) -->
+      {% if operator.operator_name == "Stagecoach" %}
+        <a href="{% url 'operator_stagecoach' %}" class="operator-name">
+          {{ operator.operator_name }}
+        </a>
+
+      {% elif operator.operator_name == "First Bus" %}
+        <a href="{% url 'operator_first' %}" class="operator-name">
+          {{ operator.operator_name }}
+        </a>
+
+      {% else %}
+        <span class="operator-name operator-name--disabled">
+          {{ operator.operator_name }}
+        </span>
+      {% endif %}
+
+
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}
+
+<style>
+.operator-name--disabled {
+  color: #9ca3af;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+</style>
