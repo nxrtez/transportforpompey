@@ -1,5 +1,14 @@
 # Transport for Portsmouth (TfP)
 
+<p align="center">
+  <img
+    src="https://raw.githubusercontent.com/nxrtez/transportforpompey/main/static/img/tfp/Blue%20Full%20Transparent.png"
+    alt="Transport for Portsmouth"
+    height=400
+  />
+</p>
+
+
 A modern, TfL-style public transport information platform for Portsmouth.
 
 ## Features
