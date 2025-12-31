@@ -295,3 +295,59 @@ class MapAdmin(admin.ModelAdmin):
             )
         }),
     )
+
+from django.contrib import admin
+from .models import NetworkIncident
+
+
+@admin.register(NetworkIncident)
+class NetworkIncidentAdmin(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "status_type",
+        "active",
+        "start_time",
+        "expected_end_time",
+    )
+
+    list_filter = (
+        "active",
+        "status_type",
+        "affects_modes",
+    )
+
+    search_fields = (
+        "title",
+        "description",
+    )
+
+    filter_horizontal = (
+        "affects_modes",
+    )
+
+    ordering = (
+        "-active",
+        "-start_time",
+    )
+
+    fieldsets = (
+        ("Incident Overview", {
+            "fields": (
+                "title",
+                "description",
+            )
+        }),
+        ("Impact", {
+            "fields": (
+                "status_type",
+                "affects_modes",
+                "active",
+            )
+        }),
+        ("Timing", {
+            "fields": (
+                "start_time",
+                "expected_end_time",
+            )
+        }),
+    )

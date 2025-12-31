@@ -3,7 +3,39 @@
 {% block title %}Service status – Transport for Portsmouth{% endblock %}
 
 {% block content %}
+
+
+<style>
+  .all-good-banner {
+    margin-top: 24px;
+    padding: 14px 28px;
+
+    background-color: #0019A8; /* TfL blue */
+    color: #ffffff;
+
+    height: 150px;
+
+    font-size: 1rem;
+    font-weight: 600;
+
+    border-radius: 6px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .all-good-banner::before {
+    content: "";
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+
+</style>
+
 <h1>Service status</h1>
+
+{% with has_issues=False %}
 
 {% for mode in modes %}
   <section class="status-mode">
@@ -12,41 +44,42 @@
     {% regroup routes by operator as operator_groups %}
 
     {% for group in operator_groups %}
-      {% if group.list.0.mode == mode %}
-        <div class="status-operator">
-          <h3>{{ group.grouper.operator_name }}</h3>
-
-          <ul class="status-route-list">
-            {% for route in group.list %}
-              {% if route.mode == mode %}
-                {% with status=route.active_statuses.0 %}
-                <li class="status-route">
+      {% for route in group.list %}
+        {% if route.mode == mode %}
+          {% with status=route.active_statuses.0 %}
+            {% if status %}
+              {% with has_issues=True %}
+                <ul class="status-route-list">
+                  <li class="status-route">
                     {% with bar_colour=route.route_hex|default:route.operator.primary_hex %}
-                        <span
+                      <span
                         class="status-bar"
                         style="background-color: {{ bar_colour }}"
                         aria-hidden="true"
-                        ></span>
+                      ></span>
                     {% endwith %}
 
-                    <span class="route-name">
-                        {{ route.service }}
-                    </span>
+                    <span class="route-name">{{ route.service }}</span>
 
                     <span class="route-status">
-                        {{ status.status_type.name|default:"Good Service" }}
+                      {{ status.status_type.name }}
                     </span>
-                    </li>
-
-                {% endwith %}
-              {% endif %}
-            {% endfor %}
-          </ul>
-
-        </div>
-      {% endif %}
+                  </li>
+                </ul>
+              {% endwith %}
+            {% endif %}
+          {% endwith %}
+        {% endif %}
+      {% endfor %}
     {% endfor %}
-
   </section>
 {% endfor %}
+
+{% if not has_issues %}
+  <div class="all-good-banner">
+    Good service on all other lines
+  </div>
+{% endif %}
+
+{% endwith %}
 {% endblock %}

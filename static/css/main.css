@@ -63,15 +63,27 @@ body {
 
 .status-route {
   display: flex;
-  align-items: center;
+  align-items: stretch;
+
+  padding: 10px 0;   /* 👈 move padding HERE */
   gap: 12px;
-  padding: 6px 0;
+}
+
+
+.status-route-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .status-bar {
-  width: 4px;
-  height: 20px;
-  border-radius: 2px;
+  width: 6px;
+  min-width: 6px;
+
+  align-self: stretch;
+  background-clip: padding-box;
+
+  border-radius: 3px;
   flex-shrink: 0;
 }
 
